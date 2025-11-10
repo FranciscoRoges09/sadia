@@ -1,41 +1,42 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>KITS 2025 - Sadia</title><!-- Meta Pixel Code -->
-<script async="" src="js/gtDdrDnEJqFU.js"></script><script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  
-  fbq('init', '766822186379301');
-  fbq('track', 'PageView');
-</script>
+    <title>KITS 2025 - Sadia</title>
 
-<noscript>
-  <img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=766822186379301&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Meta Pixel Code -->
+    <script async="" src="js/gtDdrDnEJqFU.js"></script>
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      
+      fbq('init', '1174860844708657');
+      fbq('track', 'PageView');
+    </script>
 
-<script>
-  window.pixelId = "68a03b7207ba3fa84498a661";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script><script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
+    <noscript>
+      <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1174860844708657&ev=PageView&noscript=1"/>
+    </noscript>
+    <script>
+      window.pixelId = "68a03b7207ba3fa84498a661";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+    ></script>
     
 
   
@@ -300,6 +301,17 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
         </div>
     </main>
     <script>
+        // Função para capturar UTMs (necessária para repassar no clique do resgate)
+        function getUTMs() {
+          const params = new URLSearchParams(window.location.search);
+          const utms = {};
+          ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => {
+            const value = params.get(k);
+            if (value && value.trim() !== '') utms[k] = value;
+          });
+          return utms;
+        }
+
         let currentStep = 1;
         let attempts = 5;
         const prizes = ['Nenhum', '90%', '30%', '90%', 'Nenhum', '90%'];
@@ -313,6 +325,14 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
                     document.getElementById(`quiz-step-${currentStep}`).classList.remove('hidden');
                     document.getElementById('progress-bar').style.width = `${currentStep * 25}%`;
                 } else {
+                    // 💡 Dispara evento de "Quiz Completo" quando o quiz acaba
+                    if (typeof fbq !== "undefined") {
+                        fbq('track', 'Lead', { quiz_result: 'completed' }); 
+                    }
+                    if (typeof window.trackWithUTMify !== "undefined") {
+                        window.trackWithUTMify('QuizComplete');
+                    }
+
                     document.getElementById('quiz-loader').classList.remove('hidden');
                     setTimeout(() => {
                         document.getElementById('quiz-loader').classList.add('hidden');
@@ -337,11 +357,13 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
         const redeemOfferButton = document.getElementById('redeemOffer');
 
         function createConfetti() {
-            confetti({
+            // Note: Você precisaria do script da biblioteca de confetes para isso funcionar
+            /* confetti({
                 particleCount: 100,
                 spread: 70,
                 origin: { y: 0.6 }
-            });
+            }); 
+            */
         }
 
         spinButton.addEventListener('click', () => {
@@ -352,6 +374,7 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
                 let prize;
                 let rotation;
 
+                // Sua lógica de prêmios...
                 if (spinCount === 0) {
                     prize = 'Nenhum';
                     rotation = 360 * 10 + (360 / prizes.length) * prizes.indexOf('Nenhum');
@@ -392,7 +415,8 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
                     spinButton.disabled = false;
                     spinButton.classList.remove('opacity-50', 'cursor-not-allowed');
                     wheel.style.transition = 'none';
-                    wheel.style.transform = 'rotate(0deg)';
+                    // Resetar a rotação para 0 ou para a posição inicial após a animação
+                    wheel.style.transform = `rotate(-${rotation % 360}deg)`; 
 
                     attempts--;
                     chancesLeftElement.textContent = `Chances restantes: ${attempts}`;
@@ -416,8 +440,29 @@ Celebrar junto e ceia completa tem sabor de Perdigão! Com o Kit Fortuna, sua ce
             }, 500);
         });
 
+// 💡 CORREÇÃO 3: Adicionar rastreamento de clique e repasse de UTMs no redirecionamento
 redeemOfferButton.addEventListener('click', () => {
-    window.location.href = "/sadia/index.html";
+    // 1. Rastreia o clique como um pré-checkout ou resgate
+    if (typeof fbq !== "undefined") {
+        fbq('track', 'InitiateCheckout', {
+            content_name: 'Resgate Kit 90%',
+            content_category: 'roleta_prize'
+        });
+    }
+    if (typeof window.trackWithUTMify !== "undefined") {
+        window.trackWithUTMify('ResgateGiroRoleta');
+    }
+
+    // 2. Repassa os UTMs para o link de redirecionamento
+    let link = "/sadia/index.html"; // O caminho para o seu segundo index
+    const utms = getUTMs();
+    const utmString = new URLSearchParams(utms).toString();
+    if (utmString) link += (link.includes('?') ? '&' : '?') + utmString;
+
+    // 3. Redireciona
+    setTimeout(() => {
+        window.location.href = link;
+    }, 300); // Um pequeno delay para o pixel disparar
 });
 
     </script>
