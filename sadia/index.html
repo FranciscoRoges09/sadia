@@ -415,32 +415,34 @@ button.resgatar:disabled {
 </section>
 
 <script>
- // ===============================
- // Timer regressivo de 5 minutos
- // ===============================
-let tempo = 5 * 60; // segundos
+// ===============================
+// Timer regressivo
+// ===============================
+let tempo = 5 * 60;
 const countdownEl = document.getElementById("countdown");
 
 function atualizarTimer() {
   const minutos = Math.floor(tempo / 60);
   const segundos = tempo % 60;
-  countdownEl.textContent =
-    `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-  if (tempo > 0) {
-    tempo--;
-  } else {
-    clearInterval(intervalo);
-    countdownEl.textContent = "00:00";
-    countdownEl.style.color = "#ffdf00";
-  }
+  countdownEl.textContent = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+  if (tempo > 0) tempo--;
 }
-
-const intervalo = setInterval(atualizarTimer, 1000);
-atualizarTimer();
+setInterval(atualizarTimer, 1000);
 
 // ===============================
-// Redirecionamento e tracking
+// Função pra capturar UTMs da URL
+// ===============================
+function getUTMs() {
+  const params = new URLSearchParams(window.location.search);
+  const utms = {};
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => {
+    if (params.get(k)) utms[k] = params.get(k);
+  });
+  return utms;
+}
+
+// ===============================
+// Redirecionamento + tracking
 // ===============================
 const checkoutLinks = {
   bassi: "https://seguropagamentos.com.br/KitSadiaBassi",
@@ -452,10 +454,15 @@ const checkoutLinks = {
 document.querySelectorAll('.resgatar').forEach(button => {
   button.addEventListener('click', async function() {
     const kit = this.getAttribute('data-kit');
-    const link = checkoutLinks[kit];
+    let link = checkoutLinks[kit];
     if (!link) return alert("Erro: link do checkout não encontrado.");
 
-    // ===== Evento Pixel Meta =====
+    // 🔗 Adiciona UTM à URL do checkout
+    const utms = getUTMs();
+    const utmString = new URLSearchParams(utms).toString();
+    if (utmString) link += (link.includes('?') ? '&' : '?') + utmString;
+
+    // ===== Pixel Meta =====
     if (typeof fbq !== "undefined") {
       fbq('track', 'InitiateCheckout', {
         content_name: `Kit ${kit}`,
@@ -466,21 +473,18 @@ document.querySelectorAll('.resgatar').forEach(button => {
     // ===== UTMify (se ativo) =====
     if (typeof window.trackWithUTMify !== "undefined") {
       try {
-        await window.trackWithUTMify('pendente', {
-          item: kit
-        });
-      } catch(e) {
-        console.warn("UTMify não respondeu:", e);
-      }
+        await window.trackWithUTMify('pendente', { item: kit });
+      } catch(e) { console.warn("UTMify não respondeu:", e); }
     }
 
-    // Aguarda 0.5s pra garantir envio antes do redirect
+    // 🔄 Redireciona após 0.5s
     setTimeout(() => {
       window.location.href = link;
     }, 500);
   });
 });
 </script>
+
 
 <script src="js/UazkyjySDOOI.js" async defer></script>
 </body></html>
